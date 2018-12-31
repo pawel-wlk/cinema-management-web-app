@@ -1,0 +1,11 @@
+{
+  "name": "cinema-backend",
+  "version": "1.0.0",
+  "description": "cinema management app",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Paweł Wilkosz & Piotr Kołodziejczyk",
+  "license": "ISC"
+}
