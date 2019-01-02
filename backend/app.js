@@ -1,11 +1,21 @@
 const express = require('express');
-const logger = require('morgan');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const indexRouter = require('./routes/index');
 
 const app = express();
 
-app.use(logger('dev'));
+// body parser
+app.use(bodyParser.json());
+
+// loggers
+app.use(morgan('dev'));
+app.use((req, res, next) => {
+  console.info(JSON.stringify(req.body, null, 2));
+  next();
+});
+
+// routers
 app.use(indexRouter);
-app.use(express.json());
 
 app.listen(8080, () => console.log("listening on port 8080"));
