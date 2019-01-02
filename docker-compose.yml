@@ -10,6 +10,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=admin
   backend:
+    ports:
+      - 8080:8080 # expose port for development purposes
     depends_on: 
       - database
     build: ./backend
