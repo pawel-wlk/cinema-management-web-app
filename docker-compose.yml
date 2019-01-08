@@ -1,7 +1,7 @@
 version: "3"
 services:
   database:
-    image: mariadb:10.0-xenial
+    image: mariadb:10.4
     volumes:
       - ./data:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
