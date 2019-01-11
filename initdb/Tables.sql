@@ -78,12 +78,15 @@ CREATE TABLE admin(
 );
 
 CREATE TABLE display_log(
+  entry_id INT AUTO_INCREMENT,
 	id INT,
     old_room INT,
     new_room INT,
     old_start_time DATETIME,
     new_start_time DATETIME,
-    FOREIGN KEY (id) REFERENCES display(id)
+    FOREIGN KEY (id) REFERENCES display(id),
+    PRIMARY KEY (entry_id)
+
 );
 
 
@@ -101,6 +104,41 @@ FOR EACH ROW
     THEN
      SIGNAL SQLSTATE '22003' SET MESSAGE_TEXT="Invalid seat column."; 
     END IF;
+END$$
+
+CREATE TRIGGER log_displays_after_insert AFTER INSERT ON display
+FOR EACH ROW
+  BEGIN
+    INSERT INTO display_log(id, new_room, new_start_time) 
+      VALUES (
+        NEW.id,
+        NEW.room,
+        NEW.start_time
+      );
+END$$
+
+CREATE TRIGGER log_displays_after_update AFTER UPDATE ON display
+FOR EACH ROW
+  BEGIN
+    INSERT INTO display_log(id, old_room, new_room, old_start_time, new_start_time) 
+      VALUES (
+        NEW.id,
+        OLD.room,
+        NEW.room,
+        OLD.start_time,
+        NEW.start_time
+      );
+END$$
+
+CREATE TRIGGER log_displays_after_delete AFTER DELETE ON display
+FOR EACH ROW
+  BEGIN
+      INSERT INTO display_log(id, old_room, old_start_time) 
+      VALUES (
+        OLD.id,
+        OLD.room,
+        OLD.start_time
+      );
 END$$
 DELIMITER ;
 
