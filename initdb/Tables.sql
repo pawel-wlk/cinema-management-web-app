@@ -60,7 +60,7 @@ CREATE TABLE reservation(
 );
 
 
-CREATE TABLE cinema_manager(
+CREATE TABLE manager(
 	email varchar(50) check(email REGEXP ".+@.+[.]{1}.+"),
     password varchar(50),
     cinema varchar(30),
