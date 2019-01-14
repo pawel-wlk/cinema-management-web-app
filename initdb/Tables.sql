@@ -28,6 +28,7 @@ CREATE TABLE film(
 CREATE TABLE cinema(
 	name varchar(30) NOT NULL,
     address varchar(255) NOT NULL,
+    ticket_price int unsigned default(10),
     PRIMARY KEY (name)
 );
 
@@ -42,9 +43,9 @@ CREATE TABLE room(
 
 CREATE TABLE display(
 	id INT AUTO_INCREMENT,
-    film INT,
-    room INT,
-    start_time DATETIME,
+  film INT,
+  room INT,
+  start_time DATETIME,
 	PRIMARY KEY(id),
     FOREIGN KEY(film) REFERENCES film(id),
     FOREIGN KEY(room) REFERENCES room(id)
@@ -142,4 +143,57 @@ FOR EACH ROW
 END$$
 DELIMITER ;
 
-	
+DELIMITER $$
+CREATE PROCEDURE reserve_tickets (IN arg_list VARCHAR(255))
+BEGIN
+  SET autocommit = 0;
+  SET @success = 1;
+
+  SET @params = arg_list;
+
+  -- client,display,col,row,col,row,...
+  -- first param is client id
+  SELECT SUBSTR(@params from 1 for instr(@params, ',') - 1) INTO @client;
+  -- shift list to next comma
+  SELECT SUBSTR(@params from instr(@params, ',') + 1) INTO @params;
+  SELECT SUBSTR(@params from 1 for instr(@params, ',') - 1) INTO @display;
+  -- shift list to next comma
+  SELECT SUBSTR(@params from instr(@params, ',') + 1) INTO @params;
+
+  INSERT INTO mass_reservation(client) VALUES (@client);
+  SELECT LAST_INSERT_ID() INTO @mass_id;
+
+  WHILE @params != '' DO
+    SELECT SUBSTR(@params from 1 for instr(@params, ',') - 1) INTO @seat_row;
+    SELECT SUBSTR(@params from instr(@params, ',') + 1) INTO @params;
+    SELECT SUBSTR(@params from 1 for instr(@params, ',') - 1) INTO @seat_col;
+    SELECT SUBSTR(@params from instr(@params, ',') + 1) INTO @params;
+
+    INSERT INTO reservation(mass_reservation, display, seat_row, seat_col)
+      VALUES (
+        @mass_id,
+        @display,
+        @seat_row,
+        @seat_col
+      );
+
+    SELECT ticket_price 
+      FROM display JOIN room ON display.room=room.id 
+        JOIN cinema ON room.cinema=cinema.name 
+      WHERE display.id=@display INTO @price;
+    UPDATE client SET credits=credits-@price WHERE id=@client;
+  END WHILE;
+
+  IF @success THEN
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+
+END$$
+DELIMITER ;
+
+
+
+
+
