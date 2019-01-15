@@ -3,6 +3,7 @@ CREATE USER 'client'@'%' IDENTIFIED BY 'clientpassword';
 GRANT SELECT, INSERT, UPDATE ON cinemas.client TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 
 -- grant execute jak będzie procedura do rezerwacji
+GRANT EXECUTE ON cinemas.reserve_tickets TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 
 GRANT SELECT ON cinemas.film TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 GRANT SELECT ON cinemas.cinema TO 'client'@'%' IDENTIFIED BY 'clientpassword';
