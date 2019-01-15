@@ -1,10 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
+const session = require('express-session');
+
 const indexRouter = require('./routes/index');
 
 const app = express();
 
 app.set('view engine', 'ejs');
+
+app.use(session({secret: "DEVELOPMENT"});
 
 // loggers
 app.use(morgan('dev'));

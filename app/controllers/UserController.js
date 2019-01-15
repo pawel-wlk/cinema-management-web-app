@@ -24,16 +24,18 @@ async function allDisplaysOfFilm(film, cinema) {
   return result;
 }
 
-async function newClient(email, password){
+// session: req.session
+async function registerNewClient(session, email, password){
   const connection = await mariadb.createConnection(credentials);
-	const hashPassword = await bcrypt.hash(password, 10);
-	const query = "insert into client (email, password) values (?, ?)";
-	await connection.query(query, [email, hashPassword]);
-	connection.end();
+  const hashPassword = await bcrypt.hash(password, 10);
+  const query = "insert into client (email, password) values (?, ?)";
+  await connection.query(query, [email, hashPassword]);
+  connection.end();
+  session.user = email;
+  return session;
 }
 
 // session: req.session
-// return boolean according to success status of logging in (to render proper view)
 async function login(email, password, session) {
   const connection = await mariadb.createConnection(credentials);
   const query = "select pasword from client where email=?"
@@ -45,7 +47,7 @@ async function login(email, password, session) {
   if (match) {
     session.user = email;
   }
-  return match;
+  return session;
 }
 
 async function addCredits (email, credits) {
@@ -65,4 +67,21 @@ async function myReservations (email) {
 	return result;
 }
 
-module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations, login};
+async function changePassword(email, oldPassword, newPassword) {
+  const newPasswordHash = bcrypt.hash(newPassword, 10);
+  const connection = await mariadb.createConnection(credentials);
+  let query = "select client from manager where email=?"
+  const hashPassword = await connection.query(query, [email]);
+
+  const match = await bcrypt.compare(oldPassword, hashPassword);
+
+  if (match) {
+    query = "update client set password=? where email=?";
+    await connection.query(query, [await newPasswordHash, email]);
+  }
+
+  connection.end();
+}
+  
+
+module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations, login, changePassword};

@@ -45,13 +45,43 @@ async function deleteCinema(name) {
   return result;
 }
 
+async function registerNewAdmin(email, password){
+  const connection = await mariadb.createConnection(credentials);
+  const hashPassword = await bcrypt.hash(password, 10);
+  const query = "insert into admin (email, password) values (?, ?)";
+  await connection.query(query, [email, hashPassword]);
+  connection.end();
+}
 
+async function registerNewManager(email, password){
+  const connection = await mariadb.createConnection(credentials);
+  const hashPassword = await bcrypt.hash(password, 10);
+  const query = "insert into manager (email, password) values (?, ?)";
+  await connection.query(query, [email, hashPassword]);
+  connection.end();
+}
+
+async function changePassword(email, oldPassword, newPassword) {
+  const newPasswordHash = bcrypt.hash(newPassword, 10);
+  const connection = await mariadb.createConnection(credentials);
+  let query = "select password from admin where email=?"
+  const hashPassword = await connection.query(query, [email]);
+
+  const match = await bcrypt.compare(oldPassword, hashPassword);
+
+  if (match) {
+    query = "update admin set password=? where email=?";
+    await connection.query(query, [await newPasswordHash, email]);
+  }
+
+  connection.end();
+}
+  
 
 // session: req.session
-// return boolean according to success status of logging in (to render proper view)
 async function login(email, password, session) {
   const connection = await mariadb.createConnection(credentials);
-  const query = "select pasword from admin where email=?"
+  const query = "select password from admin where email=?"
   const hashPassword = await connection.query(query, [email]);
   connection.end();
 
@@ -60,8 +90,8 @@ async function login(email, password, session) {
   if (match) {
     session.user = email;
   }
-  return match;
+  return session;
 }
 
 
-module.exports = {addFilm, allDisplays, addCinema, updateCinema, deleteCinema, login};
+module.exports = {addFilm, allDisplays, addCinema, updateCinema, deleteCinema, login, registerNewAdmin, registerNewManager, changePassword};

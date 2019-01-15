@@ -60,7 +60,6 @@ async function addRoom (row_num, column_num, cinema) {
 }	
 
 // session: req.session
-// return boolean according to success status of logging in (to render proper view)
 async function login(email, password, session) {
   const connection = await mariadb.createConnection(credentials);
   const query = "select pasword from manager where email=?"
@@ -72,7 +71,24 @@ async function login(email, password, session) {
   if (match) {
     session.user = email;
   }
-  return match;
+  return session;
 }
 
-module.exports = {filmsOnDay, allDisplaysOfFilm, allDisplays, addDisplay, updateDisplay, deleteRoom, addRoom, login};
+async function changePassword(email, oldPassword, newPassword) {
+  const newPasswordHash = bcrypt.hash(newPassword, 10);
+  const connection = await mariadb.createConnection(credentials);
+  let query = "select password from manager where email=?"
+  const hashPassword = await connection.query(query, [email]);
+
+  const match = await bcrypt.compare(oldPassword, hashPassword);
+
+  if (match) {
+    query = "update manager set password=? where email=?";
+    await connection.query(query, [await newPasswordHash, email]);
+  }
+
+  connection.end();
+}
+  
+
+module.exports = {filmsOnDay, allDisplaysOfFilm, allDisplays, addDisplay, updateDisplay, deleteRoom, addRoom, login, changePassword};
