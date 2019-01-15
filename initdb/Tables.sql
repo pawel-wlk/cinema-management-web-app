@@ -147,7 +147,6 @@ DELIMITER $$
 CREATE PROCEDURE reserve_tickets (IN arg_list VARCHAR(255))
 BEGIN
   SET autocommit = 0;
-  SET @success = 1;
 
   SET @params = arg_list;
 
@@ -169,6 +168,14 @@ BEGIN
     SELECT SUBSTR(@params from 1 for instr(@params, ',') - 1) INTO @seat_col;
     SELECT SUBSTR(@params from instr(@params, ',') + 1) INTO @params;
 
+    -- check if place is taken
+    SELECT COUNT(*) FROM reservation 
+      WHERE seat_row=@seat_row AND seat_col=@seat_col INTO @existing_reservation;
+    IF (@existing_reservation>0) THEN
+      ROLLBACK;
+    END IF;
+
+    -- add reservation
     INSERT INTO reservation(mass_reservation, display, seat_row, seat_col)
       VALUES (
         @mass_id,
@@ -184,11 +191,7 @@ BEGIN
     UPDATE client SET credits=credits-@price WHERE id=@client;
   END WHILE;
 
-  IF @success THEN
-    COMMIT;
-  ELSE
-    ROLLBACK;
-  END IF;
+  COMMIT;
 
 END$$
 DELIMITER ;
