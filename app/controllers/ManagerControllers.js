@@ -49,16 +49,16 @@ async function updateDisplay(id, room, start_time){
 }
 
 async function deleteRoom (room) {
-  const connection = await.mariadb.createConnection(credentials);
+  const connection = await mariadb.createConnection(credentials);
   const query = "delete from room where id="+room;
-  const result = await.connection.query(query);
+  const result = await connection.query(query);
   connection.end();
   return result;
 }	
 async function addRoom (row_num, column_num,cinema) {
-  const connection = await.mariadb.createConnection(credentials);
+  const connection = await mariadb.createConnection(credentials);
   const query = "insert into room (rows_number, column_number, cinema) values ("+row_num + "," + column_num + "," + cinema + ")";
-  const result = await.connection.query(query);
+  const result = await connection.query(query);
   connection.end();
   return result;
 }	
