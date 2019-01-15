@@ -31,4 +31,32 @@ async function allDisplaysOfFilm(film, cinema) {
   return result;
 }
 
-module.exports = {test, filmsOnDay, allDisplaysOfFilm};
+//inserty coś zwracają?
+async function newClient(email, password){
+  const connection = await mariadb.createConnection(credentials);
+	const hashPasword = bcrypt.hashSync(password, 10);
+	const query = "insert into client (email, password) values ( " + email + ", " + hashPasword + ")";
+	const result = await.connection.query(query);
+	connection.end();
+	return result;
+}
+
+async function addCredits (email, credits) {
+  const connection = await.mariadb.createConnection(credentials);
+  const query = "update client set credits = (credits + " + credits + ") where email = " + email;
+  const result = await.connection.query(query);
+  connection.end();
+  return result;
+}	
+
+async function myReservations (email) {
+	const connection = await.mariadb.createConnection(credentials);
+	const query = "select film.title, display.start_time, reservation.seat_row, reservation.seat_column from display
+		join film on display.film=film.id join reservation on reservation.display=display.id join mass_reservation on
+		mass_reservation.id=reservation.mass_reservation where mass_reservation.client = " + email;
+	const result = await.connection.query(query);
+	connection.end();
+	return result;
+}
+
+module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations};
