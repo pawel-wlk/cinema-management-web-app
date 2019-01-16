@@ -1,4 +1,6 @@
 const mariadb = require('mariadb');
+const { exec } = require('child_process');
+const fs = require('fs');
 
 const credentials = {
   host:'database',
@@ -93,5 +95,31 @@ async function login(email, password, session) {
   return session;
 }
 
+function makeBackup() {
+  const date = new Date();
+  exec(`mysqldump -u admin -padminpassword -h database cinemas 
+    > /backups/${date.getYear()}-${date.getMonth()}-${date.getDate()}`, 
+    (error, stdout, stderr) => {
+    if (error) {
+      throw error;
+    }
+  });
+}
 
-module.exports = {addFilm, allDisplays, addCinema, updateCinema, deleteCinema, login, registerNewAdmin, registerNewManager, changePassword};
+function loadBackup(backupName) {
+  exec(`mysql -u admin -padminpassword -h database < /backups/${backupName}`,
+    (err, stdout, stderr) => {
+    if (err) throw err;
+  });
+}
+
+function getBackupNames() {
+  let result;
+  return exec("ls /backups", (err, stdin, stdout) => {
+    if (err) throw err; 
+    return stdout;
+  }).split('\n');
+}
+
+
+module.exports = {addFilm, allDisplays, addCinema, updateCinema, deleteCinema, login, registerNewAdmin, registerNewManager, changePassword,makeBackup, loadBackup, getBackupNames};

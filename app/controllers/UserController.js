@@ -82,6 +82,15 @@ async function changePassword(email, oldPassword, newPassword) {
 
   connection.end();
 }
+
+async function getCreditsAmount(email) {
+  const connection = await mariadb.createConnection(credentials);
+  const query = "select credits from client where email=?";
+  const result = await connection.query(query, [email]);
+  connection.end();
+
+  return result;
+}
   
 
-module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations, login, changePassword};
+module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations, login, changePassword, getCreditsAmount};
