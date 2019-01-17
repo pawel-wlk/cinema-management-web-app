@@ -2,7 +2,7 @@ CREATE USER 'client'@'%' IDENTIFIED BY 'clientpassword';
 
 GRANT SELECT, INSERT, UPDATE ON cinemas.client TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 
---GRANT EXECUTE ON cinemas.reserve_tickets TO 'client'@'%' IDENTIFIED BY 'clientpassword';
+GRANT EXECUTE ON PROCEDURE cinemas.reserve_tickets  TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 
 GRANT SELECT ON cinemas.film TO 'client'@'%' IDENTIFIED BY 'clientpassword';
 GRANT SELECT ON cinemas.cinema TO 'client'@'%' IDENTIFIED BY 'clientpassword';
