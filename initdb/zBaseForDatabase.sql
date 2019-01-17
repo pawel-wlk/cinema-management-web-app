@@ -1,24 +1,24 @@
 use cinemas;
 
 INSERT INTO `admin`(email, password, surname, name) VALUES 
-	('jan.kowalski@gmail.com','','Kowalski','Jan'),
-	('adam.nowak@xd.com','','Nowak','Adam');
+	('jan.kowalski@gmail.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kowalski','Jan'),
+	('adam.nowak@xd.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Nowak','Adam');
 
 INSERT INTO `cinema`(name,address) VALUES 
 	('Kino Breslau','ul. Zamoyskiego 34, 62-342 Wrocław'),
 	('Kino Czewa','ul. Gaudiego 52, 42-200 Częstochowa');
 
 INSERT INTO `client`(email, password, credits) VALUES 
-	('jan2137@papiez.com','',0),
-	('lukasz.lukasz@gmail.com','',50),
-    ('zuzia.jakas@gmail.com','',100);
+	('jan2137@papiez.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6',0),
+	('lukasz.lukasz@gmail.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6',50),
+    ('zuzia.jakas@gmail.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6',100);
 
 INSERT INTO `manager` (email, password, cinema, name, surname) VALUES 
-	('hannasuchocka@kino.com','','Kino Breslau','Suchocka','Hanna'),
-    	('joanna.manager@kino.com','','Kino Breslau','Odra','Joanna'),
-    	('pawel_krupski@kino.com','','Kino Czewa','Krupski','Paweł'),
-    	('tymek4545@kino.com','','Kino Breslau','Krzak','Tymon'),
-    	('zygixd@kino.com','','Kino Czewa','Śmiesszek','Zygmunt');
+	('hannasuchocka@kino.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kino Breslau','Suchocka','Hanna'),
+    	('joanna.manager@kino.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kino Breslau','Odra','Joanna'),
+    	('pawel_krupski@kino.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kino Czewa','Krupski','Paweł'),
+    	('tymek4545@kino.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kino Breslau','Krzak','Tymon'),
+    	('zygixd@kino.com','$2b$10$QCLXzTKgRTltmeYLWgTsauCt/7uhW22VIVskqLhjTzJTyMwfaB4n6','Kino Czewa','Śmiesszek','Zygmunt');
     
 INSERT INTO `room` (id, cinema, rows_number, columns_number) VALUES 
 	(1,'Kino Breslau',15,30),
