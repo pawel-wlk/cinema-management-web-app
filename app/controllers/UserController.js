@@ -31,21 +31,21 @@ async function registerNewClient(session, email, password){
   const query = "insert into client (email, password) values (?, ?)";
   await connection.query(query, [email, hashPassword]);
   connection.end();
-  session.user = email;
+  session.email = email;
   return session;
 }
 
 // session: req.session
-async function login(email, password, session) {
+async function login(session, email, password) {
   const connection = await mariadb.createConnection(credentials);
-  const query = "select pasword from client where email=?"
+  const query = "select password from client where email=?"
   const hashPassword = await connection.query(query, [email]);
   connection.end();
 
-  const match = await bcrypt.compare(password, hashPassword);
+  const match = await bcrypt.compare(password, hashPassword[0].password);
 
   if (match) {
-    session.user = email;
+    session.email = email;
   }
   return session;
 }
@@ -93,4 +93,4 @@ async function getCreditsAmount(email) {
 }
   
 
-module.exports = {test, filmsOnDay, allDisplaysOfFilm, newClient, addCredits, myReservations, login, changePassword, getCreditsAmount};
+module.exports = {filmsOnDay, allDisplaysOfFilm, registerNewClient, addCredits, myReservations, login, changePassword, getCreditsAmount};

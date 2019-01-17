@@ -3,7 +3,7 @@ USE cinemas;
 
 CREATE TABLE client(
 	email varchar(50) NOT NULL check(email REGEXP ".+@.+[.]{1}.+"),
-    password varchar(50) NOT NULL,
+    password varchar(255) NOT NULL,
     credits int unsigned,
     PRIMARY KEY (email)
 );
@@ -63,7 +63,7 @@ CREATE TABLE reservation(
 
 CREATE TABLE manager(
 	email varchar(50) check(email REGEXP ".+@.+[.]{1}.+"),
-    password varchar(50),
+    password varchar(255),
     cinema varchar(30),
     name varchar(30),
     surname varchar(30),
@@ -73,7 +73,7 @@ CREATE TABLE manager(
 
 CREATE TABLE admin(
 	email varchar(50) check(email REGEXP ".+@.+[.]{1}.+"),
-    password varchar(50),
+    password varchar(255),
     name varchar(30),
     surname varchar(30)
 );
