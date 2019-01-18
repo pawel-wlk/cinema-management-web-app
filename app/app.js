@@ -3,7 +3,9 @@ const morgan = require('morgan');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const indexRouter = require('./routes/index');
+const clientRouter = require('./routes/client');
+//const managerRouter = require('./routes/manager');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use(morgan('dev'));
 //});
 
 // routers
-app.use(indexRouter);
+app.use('/', clientRouter);
+//app.use(managerRouter);
+app.use('/admin', adminRouter);
 
 app.listen(8080, () => console.log("listening on port 8080"));

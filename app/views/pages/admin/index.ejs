@@ -11,8 +11,22 @@
 
 <main>
     <div class="jumbotron">
-        <h1>Come on, reserve some tickets</h1>
-        <p>This is cinema ticket reservation app.</p>
+        <h1>Admin panel</h1>
+        <a class="btn btn-primary" href="/admin/addadmin">Add new admin</a>
+        <br>
+        <a class="btn btn-primary" href="/admin/addmanager">Add new manager</a>
+        <br>
+        <a class="btn btn-primary" href="/admin/createbackup">Create database backup</a>
+        <br>
+
+        <form action="/admin/createbackup" method="get">
+        <select>
+          <% for (let name of backupList) { %>
+          <option value="<%=name%>"><%=name%></option>
+          <% } %>
+        </select> 
+        <button type="submit" class="btn btn-primary" >Load backup</button>
+        </form>
     </div>
 </main>
 
