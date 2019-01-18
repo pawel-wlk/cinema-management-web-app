@@ -37,4 +37,34 @@ router.get('/createbackup', async (req, res) => {
   res.redirect('/admin');
 });
 
+router.get('/addadmin', (req,res) => {
+  res.render('pages/admin/addAdmin', {message: ""});
+});
+
+router.post('/addadmin', async (req, res) => {
+  try {
+    await controller.registerNewAdmin(req.body.email, req.body.password);
+    res.redirect('/admin');
+  }
+  catch(e) {
+    console.log(e);
+    res.render('pages/admin/addManager', {message:  "cannot create"});
+  }
+})
+
+router.get('/addmanager', (req,res) => {
+  res.render('pages/admin/addManager', {message: ""});
+});
+
+router.post('/addmanager', async (req, res) => {
+  try {
+    await controller.registerNewAdmin(req.body.email, req.body.password);
+    res.redirect('/admin');
+  }
+  catch(e) {
+    console.log(e);
+    res.render('pages/admin/newdManager', {message:  "cannot create"});
+  }
+})
+
 module.exports = router;
